@@ -1,5 +1,40 @@
 #include "Graph.hpp"
 
+void checkLabel(string labelName) 
+{
+    if (labelName.empty()) 
+    {
+        throw("Invalid input is passed through\n");
+    }
+}
+
+void GraphBase::addVertex(string label) 
+{
+    checkLabel(label);
+
+}
+
+/*
+void GraphBase::removeVertex(string label) 
+{
+    
+}
+
+void GraphBase::addEdge(string label1, string label2, unsigned long weight) 
+{
+
+}
+
+void GraphBase::removeEdge(string label1, string label2) 
+{
+
+}
+
+unsigned long GraphBase::shortestPath(string startLabel, string endLabel, vector<string> &path) 
+{
+
+}
+*/
 
 
 int main () 
