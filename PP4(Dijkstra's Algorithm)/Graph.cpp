@@ -1,4 +1,5 @@
 #include "Graph.hpp"
+#include <iostream>
 
 void checkLabel(string labelName) 
 {
@@ -8,44 +9,166 @@ void checkLabel(string labelName)
     }
 }
 
-void GraphBase::addVertex(string label) 
+Graph::~Graph() 
+{
+    for(auto& v : vertices) 
+    {
+        delete v;
+    }
+    for(auto& e : edges)
+    {
+        delete e;
+    }
+    vertices.clear();
+    edges.clear();
+}
+
+void Graph::addVertex(string label) 
 {
     checkLabel(label);
-
+    Vertex* v = new Vertex;
+    v->visited = false;
+    v->cost = INT_MAX;
+    v->label = "";
+    v->SP = {""};
+    vertices.push_back(v);
 }
 
-/*
-void GraphBase::removeVertex(string label) 
+void Graph::removeVertex(string label) {
+    checkLabel(label);
+
+    deque<Vertex*>::iterator v;
+    for (v = vertices.begin(); v != vertices.end(); v++) {
+        if ((*v)->label == label) {
+            vertices.erase(v);
+        }
+    }
+    deque<Edge*>::iterator e;
+    for (e =  edges.begin(); e!= edges.end(); e++) {
+        if (((*e)->cur == label) || (*e)->adj == label) {
+            edges.erase(e);
+        }
+    }
+}
+
+
+void Graph::addEdge(string label1, string label2, unsigned long weight) 
 {
-    
+    checkLabel(label1);
+    checkLabel(label2);
+
+    Edge *edge1 = new Edge(label1, label2, weight);
+    Edge *edge2 = new Edge(label2, label1, weight);
+
+    edges.push_back(edge1);
+    edges.push_back(edge2);
 }
 
-void GraphBase::addEdge(string label1, string label2, unsigned long weight) 
+void Graph::removeEdge(string label1, string label2) 
 {
-
+    checkLabel(label1);
+    checkLabel(label2);
+    deque<Edge*>::iterator edgeIterator;
+    for (edgeIterator = edges.begin(); edgeIterator != edges.end(); ++edgeIterator) 
+    {
+        if ((*edgeIterator)->cur == label1) {
+            if ((*edgeIterator)->adj == label2) {
+                edges.erase(edgeIterator);
+            }
+        }
+    }
 }
 
-void GraphBase::removeEdge(string label1, string label2) 
+void Graph::findMinimumIndex(string& e) {
+    int inx = 0;
+    deque<Vertex*>::iterator v;
+    for (v = vertices.begin(); v != vertices.end(); v++) {
+        if ((*v)->label == e) {
+            min_index = inx;
+        }
+        else {
+            inx++;
+        }
+    }
+}
+
+void Graph::findMinimumDistance(string sLabel) {
+    deque<Edge*>::iterator i;
+    for (i = edges.begin(); i != edges.end(); i++) {
+        if ((*i)->cur == min_elem) {
+            for (deque<Vertex*>::iterator j = vertices.begin(); j != vertices.end(); j++) {
+                if (((*i)->adj == (*j)->label)) {
+                    if ((vertices.at(min_index)->cost + (*i)->weight < (*j)->cost) && (*j)->visited == false) {     // if new min distance found and not visited,
+                        (*j)->cost = vertices.at(min_index)->cost + (*i)->weight;       // set min distance
+
+                        if (min_elem == sLabel) {
+                            (*j) -> SP.clear();
+                            (*j) -> SP.push_back(sLabel);
+                        }
+                        else if (min_elem != sLabel) {
+                            (*j) -> SP.clear();
+                            (*j) -> SP = vertices.at(min_index)->SP;
+                            (*j) -> SP.push_back(vertices.at(min_index)->label);
+                        }
+                        Path.push(make_pair((*j)->cost, (*j)->label));
+                    }
+                }
+            }
+        }
+    }
+}
+
+void Graph::optimalPath(string endLabel, vector<string> &path) {
+    deque<Vertex*>::iterator v;
+
+    for (v = vertices.begin(); v != vertices.end(); v++) {
+        if (endLabel == (*v)->label) {
+            shortest_dist = (*v) -> cost;
+            (*v)->SP.push_back(endLabel);
+            path = (*v)->SP;
+        }
+    }
+}
+
+void Graph::clearPath() {
+    deque<Vertex*>::iterator i;
+    for (i = vertices.begin(); i != vertices.end(); i++) {
+        (*i)->visited = false;
+        (*i)->cost = INT_MAX;
+        (*i)->SP = {""};
+    }
+}
+
+unsigned long Graph::shortestPath(string startLabel, string endLabel, vector<string> &path) 
 {
+    checkLabel(startLabel);
+    checkLabel(endLabel);
 
+    //start path
+    deque <Vertex*>::iterator v;
+    for (v = vertices.begin(); v != vertices.end(); v++) {
+        if ((*v)->label == startLabel) {
+            (*v)->SP.clear();
+            (*v)->cost = 0;
+            (*v)->SP.push_back(startLabel);
+        }
+    }
+    Path.push(make_pair(0, startLabel));
+
+    //path
+    while (!Path.empty()) {
+        min_elem = Path.top().second;
+        Path.pop();
+        findMinimumIndex(min_elem);
+        findMinimumDistance(startLabel);
+        vertices.at(min_index)->visited = true; // vertex at min_index has been visited
+    }
+
+    optimalPath(endLabel, path);
+
+    clearPath();
+
+    return shortest_dist;
 }
 
-unsigned long GraphBase::shortestPath(string startLabel, string endLabel, vector<string> &path) 
-{
 
-}
-*/
-
-
-int main () 
-{
-    vector<string> vertices1 = { "1", "2", "3", "4", "5", "6" };
-    vector<tuple<string, string, unsigned long>> edges1 = { {"1", "2", 7}, {"1", "3", 9}, {"1", "6", 14}, 
-    {"2", "3", 10}, {"2", "4", 15}, {"3", "4", 11}, {"3", "6", 2}, {"4", "5", 6}, {"5", "6", 9} };
-    for (const auto label : vertices1) g.addVertex(label);
-    /*
-    for (const auto &tuple : edges1) g.addEdge(std::get<0>(tuple), get<1>(tuple), get<2>(tuple));
-    g.shortestPath("1", "5", path); // == 20
-    g.shortestPath("1", "5", path); // = { "1", "3", "6", "5" }
-    */
-}

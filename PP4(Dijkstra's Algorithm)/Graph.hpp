@@ -1,25 +1,69 @@
 #ifndef GRAPH_H
 #define GRAPH_H
 
-#include <stdlib.h>
+#include "GraphBase.hpp"
 #include <vector>
 #include <string>
+#include <queue>
 #include <stdio.h>
 #include <stdlib.h>
-#include <stack>
-#include <map>
-#include <unordered_map>
+#include <deque>
+#include <algorithm>
 using namespace std;
 
-class GraphBase : public GraphBase 
+class Vertex 
 {
-    Graph();
-    ~Graph();
-    virtual void addVertex(string label);
-    virtual void removeVertex(string label);
-    virtual void addEdge(string label1, string label2, unsigned long weight);
-    virtual void removeEdge(string label1, string label2);
-    virtual unsigned long shortestPath(string startLabel, string endLabel, vector<string> &path);
-}
+    public:
+        int cost;
+        bool visited;
+        vector<string> SP; 
+        string label;
+
+        friend class Graph;
+        Vertex() {label = "";}
+        //~Vertex();
+        
+};
+
+class Edge
+{
+    public:
+        string cur;
+        int weight;
+        string adj;
+        friend class Graph;
+
+        Edge() { cur = ""; weight = 0; adj = ""; }
+
+        Edge(string curr, string adjc, int in_weight) {
+            cur = curr;
+            adj = adjc;
+            weight = in_weight;
+        }
+        ~Edge(){}
+};
+
+
+class Graph : public GraphBase 
+{
+    public:
+        deque<Vertex*> vertices;
+        deque<Edge*> edges;
+        priority_queue<pair<int, string>, vector<pair<int, string>>, greater<pair<int, string>>> Path;
+        Graph(){};
+        ~Graph();
+        virtual void addVertex(string label) override;
+        virtual void removeVertex(string label) override;
+        virtual void addEdge(string label1, string label2, unsigned long weight) override;
+        virtual void removeEdge(string label1, string label2) override;
+        void findMinimumIndex(string& e);
+        void findMinimumDistance(string sLabel);
+        string min_elem = "";
+        int min_index = 0;
+        virtual unsigned long shortestPath(string startLabel, string endLabel, vector<string> &path);
+        void optimalPath(string endLabel, vector<string>& path);
+        void clearPath();
+        int shortest_dist = 0;
+};
 
 #endif
