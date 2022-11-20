@@ -29,7 +29,7 @@ void Graph::addVertex(string label)
     Vertex* v = new Vertex;
     v->visited = false;
     v->cost = INT_MAX;
-    v->label = "";
+    v->label = label;
     v->SP = {""};
     vertices.push_back(v);
 }
@@ -79,7 +79,7 @@ void Graph::removeEdge(string label1, string label2)
     }
 }
 
-void Graph::findMinimumIndex(string& e) {
+void Graph::findMinIndex(string& e) {
     int inx = 0;
     deque<Vertex*>::iterator v;
     for (v = vertices.begin(); v != vertices.end(); v++) {
@@ -92,7 +92,7 @@ void Graph::findMinimumIndex(string& e) {
     }
 }
 
-void Graph::findMinimumDistance(string sLabel) {
+void Graph::findMinDist(string sLabel) {
     deque<Edge*>::iterator i;
     for (i = edges.begin(); i != edges.end(); i++) {
         if ((*i)->cur == min_elem) {
@@ -159,8 +159,8 @@ unsigned long Graph::shortestPath(string startLabel, string endLabel, vector<str
     while (!Path.empty()) {
         min_elem = Path.top().second;
         Path.pop();
-        findMinimumIndex(min_elem);
-        findMinimumDistance(startLabel);
+        findMinIndex(min_elem);
+        findMinDist(startLabel);
         vertices.at(min_index)->visited = true; // vertex at min_index has been visited
     }
 

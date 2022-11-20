@@ -21,7 +21,6 @@ class Vertex
 
         friend class Graph;
         Vertex() {label = "";}
-        //~Vertex();
         
 };
 
@@ -56,11 +55,11 @@ class Graph : public GraphBase
         virtual void removeVertex(string label) override;
         virtual void addEdge(string label1, string label2, unsigned long weight) override;
         virtual void removeEdge(string label1, string label2) override;
-        void findMinimumIndex(string& e);
-        void findMinimumDistance(string sLabel);
+        virtual unsigned long shortestPath(string startLabel, string endLabel, vector<string> &path) override;
+        void findMinIndex(string& e);
+        void findMinDist(string sLabel);
         string min_elem = "";
         int min_index = 0;
-        virtual unsigned long shortestPath(string startLabel, string endLabel, vector<string> &path);
         void optimalPath(string endLabel, vector<string>& path);
         void clearPath();
         int shortest_dist = 0;
