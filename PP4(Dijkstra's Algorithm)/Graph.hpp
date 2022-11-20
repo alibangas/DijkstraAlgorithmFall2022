@@ -9,6 +9,7 @@
 #include <stdlib.h>
 #include <deque>
 #include <algorithm>
+#include <climits>
 using namespace std;
 
 class Vertex 
