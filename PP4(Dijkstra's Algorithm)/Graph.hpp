@@ -1,3 +1,8 @@
+/*  Names: Ali-Sarosh Bangash (U01170226), Faiz Alam (U31663839), Sumit Jadhav (U89612131)
+*   Description: To make an implementation of Dijkstra's Algorithm with provided functions from 
+*   GraphBase header file, and our own file (Graph.cpp and Graph.hpp)
+*/
+
 #ifndef GRAPH_H
 #define GRAPH_H
 
