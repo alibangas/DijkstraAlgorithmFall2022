@@ -3,7 +3,6 @@
 *   GraphBase header file, and our own file (Graph.cpp and Graph.hpp)
 */
 
-
 #include "Graph.hpp"
 #include <iostream>
 
@@ -176,5 +175,3 @@ unsigned long Graph::shortestPath(string startLabel, string endLabel, vector<str
 
     return shortest_dist;
 }
-
-
